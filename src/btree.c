@@ -59,66 +59,6 @@ void transplant(BST *T, Node *u, Node *v) {
 }
 
 /**
- * @brief Realiza uma rotação à direita em um nó de uma árvore AVL.
- * 
- * @param[in] T Ponteiro para a árvore AVL onde será realizada a rotação.
- * @param[in] n Ponteiro para o nó que será rotacionado.
- */
-void right_rotate(BST *T, Node *n) {
-    Node *leftN = n->left; // Guarda o filho à esquerda de `n`
-
-    transplant(T, n, leftN); // Insere o filho à esquerda de `n` no lugar do próprio `n`
-
-    Node *RleftN = leftN->right; // Guarda o filho à direita do filho à esquerda de `n`
-    
-    // Transfere a subárvore direita de `leftN` para a subárvore esquerda de `n`
-    n->left = RleftN;
-    leftN->right = n;
-
-    // Após a rotação, `n` se tornou filho de `leftN`
-    n->parent = leftN;
-    
-    // Se a subárvore `RleftN` existir, ela mudou de lado e seu novo pai é `n`
-    if (RleftN) {
-        RleftN->parent = n;
-    }
-
-    // Atualiza as alturas
-    update_height(n);
-    update_height(leftN);
-}
-
-/**
- * @brief Realiza uma rotação à esquerda em um nó de uma árvore AVL.
- * 
- * @param[in] T Ponteiro para a árvore AVL onde será realizada a rotação.
- * @param[in] n Ponteiro para o nó que será rotacionado.
- */
-void left_rotate(BST *T, Node *n) {
-    Node *rightN = n->right; // Guarda o filho à direita de `n`
-
-    transplant(T, n, rightN); // Insere o filho à direita de `n` no lugar do próprio `n`
-
-    Node *LrightN = rightN->left; // Guarda o filho à esquerda do filho à direita de `n`
-
-    // Transfere a subárvore direita de `leftN` para a subárvore esquerda de `n`
-    n->right = LrightN;
-    rightN->left = n;
-
-    // Após a rotação, `n` se tornou filho de `rightN`
-    n->parent = rightN;
-    
-    // Se a subárvore `LrightN` existir, ela mudou de lado e seu novo pai é `n`
-    if (LrightN) {
-        LrightN->parent = n;
-    }
-
-    // Atualiza as alturas
-    update_height(n);
-    update_height(rightN);
-}
-
-/**
  * @brief Aloca um nó na memória heap e preenche com a chave fornecida.
  * 
  * @param[in] key Chave a ser inserida no nó alocado.
