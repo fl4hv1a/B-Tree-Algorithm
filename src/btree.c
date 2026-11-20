@@ -8,11 +8,6 @@
 #define TAB_SIZE 4          // Quantos espaços devem ser utilizados para representar um "TAB" no terminal
 // #define SHOW_STEPS       // A existência dessa diretiva controla a impressão detalhada dos testes
 
-typedef enum Color {
-    RED = 0,
-    BLACK = 1
-} Color;
-
 typedef struct Node {
     int key;
     struct Node *parent;
@@ -20,10 +15,6 @@ typedef struct Node {
     struct Node *right;
     Color color;
 } Node;
-
-typedef struct BST { // Binary Search Tree
-    Node *root;
-} BST;
 
 /**
  * @brief Encontra o maior entre dois inteiros.
@@ -253,62 +244,6 @@ void bst_insert(BST *T, Node *z) {
     }
 }
 
-void rb_insert_fixup(BST *T, Node *z) {
-    while (z->parent->color == RED) {
-        if (z->parent == z->parent->parent->left) { // Testa se o pai de `z` é um filho à esquerda
-            Node *y = z->parent->parent->right; // O tio de `z`
-
-            if (y->color == RED) { // O tio é vermelho
-                z->parent->color = BLACK;
-                y->color = BLACK;
-                z = z->parent->parent;
-            } else { // O tio é preto
-                if (z == z->parent->right) {
-                    z = z->parent;
-                    left_rotate(T, z);
-                }
-                z->parent->color = BLACK;
-                z->parent->parent->color = RED;
-                right_rotate(T, z);
-            }
-        } else {
-            // Igual ao if da linha 364 trocando "right" e "left"
-        }
-    }
-
-    T->root->color = BLACK;
-}
-
-void rb_insert(BST *T, Node *z) {
-    Node *y; // pai de x
-    Node *x; // posição atual que no caso será a raiz
-
-    y = NULL; 
-    x = T->root;
-
-    while(x != NULL) { // enquanto x não for nulo, desce árvore
-        y = x; 
-
-        if (z->key < x->key) { // se a chave for menor que x, desce para o nó à esquerda, do contrário desce pela direita
-            x = x->left;
-        } else x = x->right;
-    }
-    
-    z->parent = y; // seu pai recebe o nó y
-    
-    if(y == NULL) { // se o pai não existir então é a raiz
-        T->root = z;
-    } else if(z->key < y->key) { // se z for menor que y, é o filho esquerdo, do contrário é o filho direito
-        y->left = z;
-    } else y->right = z;
-
-    z->left = NULL;
-    z->right = NULL;
-    z->color = RED; // seguindo a definição de árvore vermelho e preto o nó inserido fica vermelho
-
-    rb_insert_fixup(T,z); // chama o fixup para corrigir a árvore se não mais seguir todas as regras
-}
-
 /**
  * @brief Busca e retorna o nó com a menor chave maior que a chave de x (o sucessor em-ordem de x)
  * 
@@ -412,77 +347,6 @@ Node *bst_delete(BST *T, Node *z) {
     node_free(z);
 
     return fix_node_pin;
-}
-
-void rb_delete(BST *T, Node *z){    // remove e desaloca um nó de uma árvore rubro-negra
-                                    //T é o ponteiro para a árvore RB onde o nó vai ser removido, z é o ponteiro para o nó que será removido
-    Node *y = z;                    //nó que vai sair da posição original
-    Color y_original_color = y->color;
-    Node *x;                        //nó que ocupa a posição deixada por y
-
-    if (!z->left) {                 //caso z não tenha filho esquerdo, o filho direito sobe para o lugar de z
-        x = z->right;
-        rb_transplant(T, z, z->right);
-    } else if (!z->right) {         //caso z não possua filho direito
-        x = z->left;
-        rb_transplant(T, z, z->left);
-    } else {                             //caso z possua dois filhos, então o sucessor em ordem de z toma o lugar dele
-        y = bst_minimum(z->right);    //menor nó da subárvore direita (não tem filho esquerdo)
-        y_original_color = y->color;  //o nó que sai é o y, se guarda a cor dele
-        x = y->right;                 //o filho direto de y vai ocupar a posição que y deixa
-
-        if (y->parent == z) {           //y já era filho direto de z, x continua abaixo de y que vai para a posição de z,
-                                        //então o pai de x é o próprio y (x.p = y do livro)
-            x->parent = y;            
-        } else {
-            rb_transplant(T, y, y->right);
-            y->right = z->right;            //depois se coloca a subárvore direita de z embaixo de y
-            y->right->parent = y;
-        }
-        rb_transplant(T, z, y);         //coloca y no lugar de z e liga a subárvore esquerda de z a ele
-        y->left = z->left;
-        y->left->parent = y;
-        y->color = z->color;        //y herda a cor de z, assim, na posição, a cor de z não mudou, apenas a cor original de y em sua posição antiga sendo deixada
-    } 
-
-    node_free(z);
-
-    if (y_original_color == BLACK) {      //há problema se o nó que saiu era preto, se era vermelho a regra "vermelho não tem filho vermelho" 
-        rb_delete_fixup(T, x);          //continua valendo
-    }
-}
-
-
-
-void rb_delete_fixup(BST *T, Node *x) {
-    while (x != T->root && color_of(x) == BLACK) {
-        Node *w;
-        if (x == x->parent->left) {
-            w = x->parent->right;
-        }
-        if (w->color == RED) {
-            w->color = BLACK;
-            x->parent->color = RED;
-            left_rotate(T, x->parent);
-            w = x->parent->right;
-        }
-        if (color_of(w->left) == BLACK && color_of(w->right) == BLACK) {
-            w->color = RED;
-            x = x->parent;
-        } else {
-            if (color_of(w->right) == BLACK) {
-                w->left->color = BLACK;
-                w->color = RED;
-                right_rotate(T, w);
-                w = x->parent->right;
-            }
-            w->color = x->parent->color;
-            x->parent->color = BLACK;
-            w->right->color = BLACK;
-            left_rotate(T, x->parent);
-            x = T->root;
-        }
-    }
 }
 
 /**
