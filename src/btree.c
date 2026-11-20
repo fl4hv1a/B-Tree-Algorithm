@@ -10,7 +10,7 @@
 
 typedef struct Node {
     int keys[2*T_PARAM-1]; // Arranjo de chaves presentes nesse nó
-    size_t keys_size; // Quantas chaves existem no arranjo de chaves desse nó
+    int keys_size; // Quantas chaves existem no arranjo de chaves desse nó
     struct Node *parent; // Ponteiro para o nó pai desse nó
     struct Node *childs[2*T_PARAM]; // Arranjo de ponteiros para os filhos desse nó
     bool isLeaf; // Rastreia se esse nó é uma folha
