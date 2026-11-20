@@ -59,17 +59,17 @@ void transplant(BST *T, Node *u, Node *v) {
 }
 
 /**
- * @brief Aloca um nó na memória heap e preenche com a chave fornecida.
+ * @brief Aloca um nó na memória heap.
  * 
- * @param[in] key Chave a ser inserida no nó alocado.
+ * @param[in] isLeaf Valor booleano definindo se o nó será folha ou não.
  * 
  * @return Ponteiro para o nó alocado, ou NULL em caso de falha na alocação.
  */
-Node *node_alloc(int key) {
+Node *node_alloc(bool isLeaf) {
     Node *n = (Node *) calloc(1, sizeof(Node));
 
     if (n) {
-        n->key = key;
+        n->isLeaf = isLeaf;
     }
 
     return n;
