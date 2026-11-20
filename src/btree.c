@@ -34,31 +34,6 @@ int max(const int a, const int b) {
 }
 
 /**
- * @brief Substitui uma subárvore BST de raíz `u` por uma subárvore BST de raíz `v`.
- * 
- * @param[in] T Ponteiro para a árvore BST onde as subárvores estão contidas.
- * @param[in] u Ponteiro para o nó raíz da subárvore BST original.
- * @param[in] v Ponteiro para o novo nó raíz da subárvore BST.
- */
-void transplant(BST *T, Node *u, Node *v) {
-    if (u == T->root) {
-        // Se `u` era a raiz, `v` vai virar a nova raiz
-        T->root = v;
-    } else if (u == u->parent->left) {
-        // Se `u` era filho à esquerda, seu pai agora aponta para `v`
-        u->parent->left = v;
-    } else {
-        // Se `u` era filho à direita, seu pai agora aponta pra `v`
-        u->parent->right = v;
-    }
-
-    if (v) {
-        // Se `v` for não-nulo, definimos o novo pai de `v`
-        v->parent = u->parent;
-    }
-}
-
-/**
  * @brief Aloca um nó na memória heap.
  * 
  * @param[in] isLeaf Valor booleano definindo se o nó será folha ou não.
