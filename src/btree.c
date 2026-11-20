@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 
+#define T_PARAM 2 // O parâmetro `T` da árvore B (define o máximo e mínimo de chaves em um nó e deve ser >= 2)
 #define TAB_SIZE 4          // Quantos espaços devem ser utilizados para representar um "TAB" no terminal
 // #define SHOW_STEPS       // A existência dessa diretiva controla a impressão detalhada dos testes
 
