@@ -9,12 +9,16 @@
 // #define SHOW_STEPS       // A existência dessa diretiva controla a impressão detalhada dos testes
 
 typedef struct Node {
-    int key;
-    struct Node *parent;
-    struct Node *left;
-    struct Node *right;
-    Color color;
+    int keys[2*T_PARAM-1]; // Arranjo de chaves presentes nesse nó
+    size_t keys_size; // Quantas chaves existem no arranjo de chaves desse nó
+    struct Node *parent; // Ponteiro para o nó pai desse nó
+    struct Node *childs[2*T_PARAM]; // Arranjo de ponteiros para os filhos desse nó
+    bool isLeaf; // Rastreia se esse nó é uma folha
 } Node;
+
+typedef struct BTree {
+    Node *root; // Raíz da árvore
+} BTree;
 
 /**
  * @brief Encontra o maior entre dois inteiros.
